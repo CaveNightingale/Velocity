@@ -34,11 +34,6 @@ public final class RegistryKeyArgumentList {
       static final ResourceOrTag.Serializer REGISTRY = new ResourceOrTag.Serializer();
 
       @Override
-      public ResourceOrTag deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-        return new ResourceOrTag(ProtocolUtils.readString(buf));
-      }
-
-      @Override
       public void serialize(ResourceOrTag object, ByteBuf buf, ProtocolVersion protocolVersion) {
         ProtocolUtils.writeString(buf, object.getIdentifier());
       }
@@ -54,11 +49,6 @@ public final class RegistryKeyArgumentList {
     public static class Serializer implements ArgumentPropertySerializer<ResourceOrTagKey> {
 
       static final ResourceOrTagKey.Serializer REGISTRY = new ResourceOrTagKey.Serializer();
-
-      @Override
-      public ResourceOrTagKey deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-        return new ResourceOrTagKey(ProtocolUtils.readString(buf));
-      }
 
       @Override
       public void serialize(ResourceOrTagKey object, ByteBuf buf, ProtocolVersion protocolVersion) {
@@ -78,11 +68,6 @@ public final class RegistryKeyArgumentList {
       static final Resource.Serializer REGISTRY = new Resource.Serializer();
 
       @Override
-      public Resource deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-        return new Resource(ProtocolUtils.readString(buf));
-      }
-
-      @Override
       public void serialize(Resource object, ByteBuf buf, ProtocolVersion protocolVersion) {
         ProtocolUtils.writeString(buf, object.getIdentifier());
       }
@@ -98,12 +83,7 @@ public final class RegistryKeyArgumentList {
     public static class Serializer implements ArgumentPropertySerializer<ResourceKey> {
 
       static final ResourceKey.Serializer REGISTRY = new ResourceKey.Serializer();
-
-      @Override
-      public ResourceKey deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-        return new ResourceKey(ProtocolUtils.readString(buf));
-      }
-
+      
       @Override
       public void serialize(ResourceKey object, ByteBuf buf, ProtocolVersion protocolVersion) {
         ProtocolUtils.writeString(buf, object.getIdentifier());

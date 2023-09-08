@@ -17,8 +17,6 @@
 
 package com.velocitypowered.proxy.protocol.packet.brigadier;
 
-import static com.velocitypowered.proxy.protocol.packet.brigadier.IntegerArgumentPropertySerializer.HAS_MAXIMUM;
-import static com.velocitypowered.proxy.protocol.packet.brigadier.IntegerArgumentPropertySerializer.HAS_MINIMUM;
 import static com.velocitypowered.proxy.protocol.packet.brigadier.IntegerArgumentPropertySerializer.getFlags;
 
 import com.mojang.brigadier.arguments.DoubleArgumentType;
@@ -30,14 +28,6 @@ class DoubleArgumentPropertySerializer implements ArgumentPropertySerializer<Dou
   static final DoubleArgumentPropertySerializer DOUBLE = new DoubleArgumentPropertySerializer();
 
   private DoubleArgumentPropertySerializer() {
-  }
-
-  @Override
-  public DoubleArgumentType deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-    byte flags = buf.readByte();
-    double minimum = (flags & HAS_MINIMUM) != 0 ? buf.readDouble() : Double.MIN_VALUE;
-    double maximum = (flags & HAS_MAXIMUM) != 0 ? buf.readDouble() : Double.MAX_VALUE;
-    return DoubleArgumentType.doubleArg(minimum, maximum);
   }
 
   @Override

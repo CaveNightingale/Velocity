@@ -35,21 +35,6 @@ class StringArgumentPropertySerializer implements ArgumentPropertySerializer<Str
   }
 
   @Override
-  public StringArgumentType deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-    int type = ProtocolUtils.readVarInt(buf);
-    switch (type) {
-      case 0:
-        return StringArgumentType.word();
-      case 1:
-        return StringArgumentType.string();
-      case 2:
-        return StringArgumentType.greedyString();
-      default:
-        throw new IllegalArgumentException("Invalid string argument type " + type);
-    }
-  }
-
-  @Override
   public void serialize(StringArgumentType object, ByteBuf buf, ProtocolVersion protocolVersion) {
     switch (object.getType()) {
       case SINGLE_WORD:

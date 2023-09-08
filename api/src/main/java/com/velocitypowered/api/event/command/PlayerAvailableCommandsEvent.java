@@ -16,9 +16,8 @@ import com.velocitypowered.api.proxy.Player;
 
 /**
  * Allows plugins to modify the packet indicating commands available on the server to a
- * Minecraft 1.13+ client. The given {@link RootCommandNode} is mutable. Velocity will wait
- * for this event to finish firing before sending the list of available commands to the
- * client.
+ * Minecraft 1.13+ client. The given {@link RootCommandNode} is append-only, getters return
+ * only appended nodes.
  */
 @AwaitingEvent
 @Beta
@@ -36,7 +35,7 @@ public class PlayerAvailableCommandsEvent {
   public PlayerAvailableCommandsEvent(Player player,
       RootCommandNode<?> rootNode) {
     this.player = checkNotNull(player, "player");
-    this.rootNode = checkNotNull(rootNode, "rootNode");
+    this.rootNode = checkNotNull(rootNode, "root");
   }
 
   public Player getPlayer() {

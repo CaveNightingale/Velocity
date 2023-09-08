@@ -27,11 +27,6 @@ public class RegistryKeyArgumentSerializer implements
   static final RegistryKeyArgumentSerializer REGISTRY = new RegistryKeyArgumentSerializer();
 
   @Override
-  public RegistryKeyArgument deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-    return new RegistryKeyArgument(ProtocolUtils.readString(buf));
-  }
-
-  @Override
   public void serialize(RegistryKeyArgument object, ByteBuf buf, ProtocolVersion protocolVersion) {
     ProtocolUtils.writeString(buf, object.getIdentifier());
   }

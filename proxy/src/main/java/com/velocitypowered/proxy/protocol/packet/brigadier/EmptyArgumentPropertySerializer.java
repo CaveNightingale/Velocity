@@ -19,7 +19,6 @@ package com.velocitypowered.proxy.protocol.packet.brigadier;
 
 import com.velocitypowered.api.network.ProtocolVersion;
 import io.netty.buffer.ByteBuf;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * An argument property serializer that will serialize and deserialize nothing.
@@ -30,11 +29,6 @@ class EmptyArgumentPropertySerializer implements ArgumentPropertySerializer<Void
       new EmptyArgumentPropertySerializer();
 
   private EmptyArgumentPropertySerializer() {
-  }
-
-  @Override
-  public @Nullable Void deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-    return null;
   }
 
   @Override

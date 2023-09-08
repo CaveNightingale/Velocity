@@ -33,14 +33,6 @@ class IntegerArgumentPropertySerializer implements ArgumentPropertySerializer<In
   }
 
   @Override
-  public IntegerArgumentType deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-    byte flags = buf.readByte();
-    int minimum = (flags & HAS_MINIMUM) != 0 ? buf.readInt() : Integer.MIN_VALUE;
-    int maximum = (flags & HAS_MAXIMUM) != 0 ? buf.readInt() : Integer.MAX_VALUE;
-    return IntegerArgumentType.integer(minimum, maximum);
-  }
-
-  @Override
   public void serialize(IntegerArgumentType object, ByteBuf buf, ProtocolVersion protocolVersion) {
     boolean hasMinimum = object.getMinimum() != Integer.MIN_VALUE;
     boolean hasMaximum = object.getMaximum() != Integer.MAX_VALUE;

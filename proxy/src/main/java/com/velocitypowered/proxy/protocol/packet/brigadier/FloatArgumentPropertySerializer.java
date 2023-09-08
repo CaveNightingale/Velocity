@@ -17,8 +17,6 @@
 
 package com.velocitypowered.proxy.protocol.packet.brigadier;
 
-import static com.velocitypowered.proxy.protocol.packet.brigadier.IntegerArgumentPropertySerializer.HAS_MAXIMUM;
-import static com.velocitypowered.proxy.protocol.packet.brigadier.IntegerArgumentPropertySerializer.HAS_MINIMUM;
 import static com.velocitypowered.proxy.protocol.packet.brigadier.IntegerArgumentPropertySerializer.getFlags;
 
 import com.mojang.brigadier.arguments.FloatArgumentType;
@@ -31,14 +29,6 @@ class FloatArgumentPropertySerializer implements ArgumentPropertySerializer<Floa
 
   private FloatArgumentPropertySerializer() {
 
-  }
-
-  @Override
-  public FloatArgumentType deserialize(ByteBuf buf, ProtocolVersion protocolVersion) {
-    byte flags = buf.readByte();
-    float minimum = (flags & HAS_MINIMUM) != 0 ? buf.readFloat() : Float.MIN_VALUE;
-    float maximum = (flags & HAS_MAXIMUM) != 0 ? buf.readFloat() : Float.MAX_VALUE;
-    return FloatArgumentType.floatArg(minimum, maximum);
   }
 
   @Override
