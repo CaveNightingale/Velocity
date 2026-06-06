@@ -14,11 +14,14 @@ import com.velocitypowered.api.util.Favicon;
 import com.velocitypowered.api.util.ModInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import net.kyori.adventure.text.Component;
+import org.jspecify.annotations.Nullable;
+
 
 /**
  * Represents a 1.7 and above server list ping response. This class is immutable.
@@ -27,7 +30,7 @@ public final class ServerPing {
 
   private final Version version;
   private final @Nullable Players players;
-  private final net.kyori.adventure.text.Component description;
+  private final @Nullable Component description;
   private final @Nullable Favicon favicon;
   private final @Nullable ModInfo modinfo;
 
@@ -46,8 +49,8 @@ public final class ServerPing {
    * @param modinfo the mods this server runs
    */
   public ServerPing(Version version, @Nullable Players players,
-      net.kyori.adventure.text.Component description, @Nullable Favicon favicon,
-      @Nullable ModInfo modinfo) {
+                    Component description, @Nullable Favicon favicon,
+                    @Nullable ModInfo modinfo) {
     this.version = Preconditions.checkNotNull(version, "version");
     this.players = players;
     this.description = Preconditions.checkNotNull(description, "description");
@@ -63,7 +66,8 @@ public final class ServerPing {
     return Optional.ofNullable(players);
   }
 
-  public net.kyori.adventure.text.Component getDescriptionComponent() {
+  @Nullable
+  public Component getDescriptionComponent() {
     return description;
   }
 
@@ -150,7 +154,7 @@ public final class ServerPing {
     private final List<SamplePlayer> samplePlayers = new ArrayList<>();
     private String modType = "FML";
     private final List<ModInfo.Mod> mods = new ArrayList<>();
-    private net.kyori.adventure.text.Component description;
+    private Component description;
     private @Nullable Favicon favicon;
     private boolean nullOutPlayers;
     private boolean nullOutModinfo;
@@ -159,31 +163,79 @@ public final class ServerPing {
 
     }
 
+    /**
+     * Uses the modified {@code version} info in the response.
+     *
+     * @param version version info to set
+     * @return this builder, for chaining
+     */
     public Builder version(Version version) {
       this.version = Preconditions.checkNotNull(version, "version");
       return this;
     }
 
+    /**
+     * Uses the modified {@code onlinePlayers} number in the response.
+     *
+     * @param onlinePlayers number for online players to set
+     * @return this builder, for chaining
+     */
     public Builder onlinePlayers(int onlinePlayers) {
       this.onlinePlayers = onlinePlayers;
       return this;
     }
 
+    /**
+     * Uses the modified {@code maximumPlayers} number in the response.
+     * <b>This will not modify the actual maximum players that can join the server.</b>
+     *
+     * @param maximumPlayers number for maximum players to set
+     * @return this builder, for chaining
+     */
     public Builder maximumPlayers(int maximumPlayers) {
       this.maximumPlayers = maximumPlayers;
       return this;
     }
 
+    /**
+     * Uses the modified {@code players} array in the response.
+     *
+     * @param players array of SamplePlayers to add
+     * @return this builder, for chaining
+     */
     public Builder samplePlayers(SamplePlayer... players) {
       this.samplePlayers.addAll(Arrays.asList(players));
       return this;
     }
 
+    /**
+     * Uses the modified {@code players} collection in the response.
+     *
+     * @param players collection of SamplePlayers to add
+     * @return this builder, for chaining
+     */
+    public Builder samplePlayers(Collection<SamplePlayer> players) {
+      this.samplePlayers.addAll(players);
+      return this;
+    }
+
+    /**
+     * Uses the modified {@code modType} in the response.
+     *
+     * @param modType the mod type to set
+     * @return this builder, for chaining
+     */
     public Builder modType(String modType) {
       this.modType = Preconditions.checkNotNull(modType, "modType");
       return this;
     }
 
+    /**
+     * Uses the modified {@code mods} array in the response.
+     *
+     * @param mods array of mods to use
+     * @return this builder, for chaining
+     */
     public Builder mods(ModInfo.Mod... mods) {
       this.mods.addAll(Arrays.asList(mods));
       return this;
@@ -193,7 +245,7 @@ public final class ServerPing {
      * Uses the modified {@code mods} list in the response.
      *
      * @param mods the mods list to use
-     * @return this build, for chaining
+     * @return this builder, for chaining
      */
     public Builder mods(ModInfo mods) {
       Preconditions.checkNotNull(mods, "mods");
@@ -203,36 +255,74 @@ public final class ServerPing {
       return this;
     }
 
+    /**
+     * Clears the current list of mods to use in the response.
+     *
+     * @return this builder, for chaining
+     */
     public Builder clearMods() {
       this.mods.clear();
       return this;
     }
 
+    /**
+     * Clears the current list of PlayerSamples to use in the response.
+     *
+     * @return this builder, for chaining
+     */
     public Builder clearSamplePlayers() {
       this.samplePlayers.clear();
       return this;
     }
 
+    /**
+     * Defines the server as mod incompatible in the response.
+     *
+     * @return this builder, for chaining
+     */
     public Builder notModCompatible() {
       this.nullOutModinfo = true;
       return this;
     }
 
+    /**
+     * Enables nulling Players in the response.
+     * This will display the player count as {@code ???}.
+     *
+     * @return this builder, for chaining
+     */
     public Builder nullPlayers() {
       this.nullOutPlayers = true;
       return this;
     }
 
-    public Builder description(net.kyori.adventure.text.Component description) {
+    /**
+     * Uses the {@code description} Component in the response.
+     *
+     * @param description Component to use as the description.
+     * @return this builder, for chaining
+     */
+    public Builder description(Component description) {
       this.description = Preconditions.checkNotNull(description, "description");
       return this;
     }
 
+    /**
+     * Uses the {@code favicon} in the response.
+     *
+     * @param favicon Favicon instance to use.
+     * @return this builder, for chaining
+     */
     public Builder favicon(Favicon favicon) {
       this.favicon = Preconditions.checkNotNull(favicon, "favicon");
       return this;
     }
 
+    /**
+     * Clears the current favicon used in the response.
+     *
+     * @return this builder, for chaining
+     */
     public Builder clearFavicon() {
       this.favicon = null;
       return this;
@@ -272,7 +362,7 @@ public final class ServerPing {
       return samplePlayers;
     }
 
-    public Optional<net.kyori.adventure.text.Component> getDescriptionComponent() {
+    public Optional<Component> getDescriptionComponent() {
       return Optional.ofNullable(description);
     }
 
@@ -429,6 +519,10 @@ public final class ServerPing {
    */
   public static final class SamplePlayer {
 
+    public static final SamplePlayer ANONYMOUS = new SamplePlayer(
+        "Anonymous Player",
+        new UUID(0L, 0L)
+    );
     private final String name;
     private final UUID id;
 

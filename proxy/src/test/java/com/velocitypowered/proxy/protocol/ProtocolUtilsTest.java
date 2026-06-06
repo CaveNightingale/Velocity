@@ -17,6 +17,7 @@
 
 package com.velocitypowered.proxy.protocol;
 
+import static com.velocitypowered.proxy.protocol.ProtocolUtils.encode21BitVarInt;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -70,7 +71,7 @@ public class ProtocolUtilsTest {
   private void writeReadTestOld(ByteBuf buf, int test) {
     buf.clear();
     writeVarIntOld(buf, test);
-    assertEquals(test, ProtocolUtils.readVarIntSafely(buf));
+    assertEquals(test, ProtocolUtils.readVarInt(buf));
   }
 
   @Test
@@ -83,7 +84,7 @@ public class ProtocolUtilsTest {
 
   private void writeReadTest3Bytes(ByteBuf buf, int test) {
     buf.clear();
-    ProtocolUtils.write21BitVarInt(buf, test);
+    buf.writeMedium(encode21BitVarInt(test));
     assertEquals(test, ProtocolUtils.readVarInt(buf));
   }
 
@@ -103,7 +104,7 @@ public class ProtocolUtilsTest {
           "Encoding of " + i + " was invalid");
 
       assertEquals(i, oldReadVarIntSafely(varintNew));
-      assertEquals(i, ProtocolUtils.readVarIntSafely(varintOld));
+      assertEquals(i, ProtocolUtils.readVarInt(varintOld));
 
       varintNew.clear();
       varintOld.clear();

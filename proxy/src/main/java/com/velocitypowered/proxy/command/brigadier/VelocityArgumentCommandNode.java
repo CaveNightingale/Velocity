@@ -93,6 +93,16 @@ public class VelocityArgumentCommandNode<S, T> extends ArgumentCommandNode<S, St
     throw new UnsupportedOperationException();
   }
 
+  public VelocityArgumentCommandNode<S, T> withCommand(Command<S> command) {
+    return new VelocityArgumentCommandNode<>(getName(), type, command, getRequirement(),
+        getContextRequirement(), getRedirect(), getRedirectModifier(), isFork(), getCustomSuggestions());
+  }
+
+  public VelocityArgumentCommandNode<S, T> withRedirect(CommandNode<S> target) {
+    return new VelocityArgumentCommandNode<>(getName(), type, getCommand(), getRequirement(),
+        getContextRequirement(), target, getRedirectModifier(), isFork(), getCustomSuggestions());
+  }
+
   @Override
   public boolean isValidInput(final String input) {
     return true;
@@ -108,14 +118,12 @@ public class VelocityArgumentCommandNode<S, T> extends ArgumentCommandNode<S, St
     if (this == o) {
       return true;
     }
-    if (!(o instanceof VelocityArgumentCommandNode)) {
+    if (!(o instanceof VelocityArgumentCommandNode that)) {
       return false;
     }
-    if (!super.equals(o)) {
+    if (!super.equals(that)) {
       return false;
     }
-
-    final VelocityArgumentCommandNode<?, ?> that = (VelocityArgumentCommandNode<?, ?>) o;
     return this.type.equals(that.type);
   }
 

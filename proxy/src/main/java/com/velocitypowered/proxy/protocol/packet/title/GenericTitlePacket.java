@@ -20,6 +20,7 @@ package com.velocitypowered.proxy.protocol.packet.title;
 import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.proxy.protocol.MinecraftPacket;
 import com.velocitypowered.proxy.protocol.ProtocolUtils;
+import com.velocitypowered.proxy.protocol.packet.chat.ComponentHolder;
 import io.netty.buffer.ByteBuf;
 
 public abstract class GenericTitlePacket implements MinecraftPacket {
@@ -39,7 +40,7 @@ public abstract class GenericTitlePacket implements MinecraftPacket {
     }
 
     public int getAction(ProtocolVersion version) {
-      return version.compareTo(ProtocolVersion.MINECRAFT_1_11) < 0
+      return version.lessThan(ProtocolVersion.MINECRAFT_1_11)
           ? action > 2 ? action - 1 : action : action;
     }
   }
@@ -55,11 +56,11 @@ public abstract class GenericTitlePacket implements MinecraftPacket {
     return action;
   }
 
-  public String getComponent() {
+  public ComponentHolder getComponent() {
     throw new UnsupportedOperationException("Invalid function for this TitlePacket ActionType");
   }
 
-  public void setComponent(String component) {
+  public void setComponent(ComponentHolder component) {
     throw new UnsupportedOperationException("Invalid function for this TitlePacket ActionType");
   }
 
@@ -103,27 +104,15 @@ public abstract class GenericTitlePacket implements MinecraftPacket {
    */
   public static GenericTitlePacket constructTitlePacket(ActionType type, ProtocolVersion version) {
     GenericTitlePacket packet = null;
-    if (version.compareTo(ProtocolVersion.MINECRAFT_1_17) >= 0) {
-      switch (type) {
-        case SET_ACTION_BAR:
-          packet = new TitleActionbarPacket();
-          break;
-        case SET_SUBTITLE:
-          packet = new TitleSubtitlePacket();
-          break;
-        case SET_TIMES:
-          packet = new TitleTimesPacket();
-          break;
-        case SET_TITLE:
-          packet = new TitleTextPacket();
-          break;
-        case HIDE:
-        case RESET:
-          packet = new TitleClearPacket();
-          break;
-        default:
-          throw new IllegalArgumentException("Invalid ActionType");
-      }
+    if (version.noLessThan(ProtocolVersion.MINECRAFT_1_17)) {
+      packet = switch (type) {
+        case SET_ACTION_BAR -> new TitleActionbarPacket();
+        case SET_SUBTITLE -> new TitleSubtitlePacket();
+        case SET_TIMES -> new TitleTimesPacket();
+        case SET_TITLE -> new TitleTextPacket();
+        case HIDE, RESET -> new TitleClearPacket();
+        default -> throw new IllegalArgumentException("Invalid ActionType");
+      };
     } else {
       packet = new LegacyTitlePacket();
     }
